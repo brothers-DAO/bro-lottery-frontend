@@ -185,6 +185,7 @@ function createBroSignRequestV1(
         }
       }
     ],
+    data: {},
     nonce: creationTime().toString(),
     chainId: chain.toString(),
     gasLimit: 3000,

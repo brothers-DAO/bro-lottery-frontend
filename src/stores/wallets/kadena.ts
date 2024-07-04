@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { type Account, type SigningCommand } from '@/types/kadena'
 import { useEckoWalletStore } from '@/stores/wallets'
 import { useWCKadenaStore } from '@/stores/wallets'
-import { createEckoWalletQuicksign, type IUnsignedCommand } from '@kadena/client'
+import { type IUnsignedCommand } from '@kadena/client'
 import { getLocalData, type LinxSignRequest } from '@/functions/pactUtils'
 import { nameSpace } from '@/config'
 import { useLotteryStore } from '../lottery'
@@ -29,7 +29,6 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
   })
   const wallet = ref<Wallets | undefined>()
   const showModal = ref(false)
-  const eckoQuickSign = createEckoWalletQuicksign()
 
   function setAccount(address: Account, walletType: Wallets) {
     account.value = {
@@ -53,22 +52,6 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
     wallet.value = undefined
   }
 
-  async function singleSignRequest(request: SigningCommand) {
-    if (wallet.value === Wallets.EckoWallet) {
-      // TODO: Implement Sign for Ecko
-    } else if (wallet.value === Wallets.WalletConnect) {
-      await useWCKadenaStore().signRequest(request)
-    }
-  }
-
-  async function quickSign(cmdList: Array<IUnsignedCommand>) {
-    if (wallet.value === Wallets.EckoWallet) {
-      return eckoQuickSign(cmdList)
-    } else {
-      throw new Error(`Sign not implemented for ${wallet.value}`)
-    }
-  }
-
   async function sign(cmd: IUnsignedCommand | LinxSignRequest) {
     if (wallet.value === Wallets.EckoWallet) {
       return useEckoWalletStore()
@@ -78,6 +61,8 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
         })
     } else if (wallet.value === Wallets.LinxWallet) {
       return useLinxWalletStore().sign(cmd as LinxSignRequest)
+    } else if (wallet.value === Wallets.WalletConnect) {
+      return useWCKadenaStore().signRequest(cmd as SigningCommand)
     } else {
       throw new Error(`Sign not implemented for ${wallet.value}`)
     }
@@ -123,8 +108,6 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
     disconnect,
     toggleModal,
     showModal,
-    singleSignRequest,
-    quickSign,
     sign,
     addPendingTransaction
   }
