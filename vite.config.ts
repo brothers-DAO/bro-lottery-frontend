@@ -6,6 +6,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/bro_lottery/',
   plugins: [vue(), vueJsx()],
   server: {
     port: 5500
