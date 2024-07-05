@@ -13,139 +13,139 @@ export const tokenList: Array<kadenaToken> = [
     id: 'Bro',
     symbol: 'BRO',
     contract: 'n_582fed11af00dc626812cd7890bb88e72067f28c.bro',
-    image: '@/assets/tokens/bro.png'
+    image: '/tokens/bro.png'
   },
   {
     id: 'Kadena',
     symbol: 'KDA',
     contract: 'coin',
-    image: '@/assets/tokens/kda.png'
+    image: '/tokens/kda.png'
   },
 
   {
     id: 'Arkade',
     symbol: 'ARKD',
     contract: 'arkade.token',
-    image: '@/assets/tokens/arkd.png'
+    image: '/tokens/arkd.png'
   },
   {
     id: 'Kishu Ken',
     symbol: 'KISHK',
     contract: 'free.kishu-ken',
-    image: '@/assets/tokens/kishk.png'
+    image: '/tokens/kishk.png'
   },
   {
     id: 'Kaddex',
     symbol: 'KDX',
     contract: 'kaddex.kdx',
-    image: '@/assets/tokens/kdx.png'
+    image: '/tokens/kdx.png'
   },
   {
     id: 'Miners Of Kadenia',
     symbol: 'MOK',
     contract: 'mok.token',
-    image: '@/assets/tokens/mok.png'
+    image: '/tokens/mok.png'
   },
   {
     id: 'K:Shib',
     symbol: 'KSHIB',
     contract: 'free.SHIB',
-    image: '@/assets/tokens/kshib.png'
+    image: '/tokens/kshib.png'
   },
   {
     id: 'Docushield',
     symbol: 'DOC',
     contract: 'free.docu',
-    image: '@/assets/tokens/doc.png'
+    image: '/tokens/doc.png'
   },
   {
     id: 'Kapybara',
     symbol: 'KAPY',
     contract: 'free.kapybara-token',
-    image: '@/assets/tokens/kapy.png'
+    image: '/tokens/kapy.png'
   },
   {
     id: 'Crankk',
     symbol: 'CRANKK',
     contract: 'free.crankk01',
-    image: '@/assets/tokens/crankk.png'
+    image: '/tokens/crankk.png'
   },
   {
     id: 'KDLaunch',
     symbol: 'KDL',
     contract: 'kdlaunch.token',
-    image: '@/assets/tokens/kdl.png'
+    image: '/tokens/kdl.png'
   },
   {
     id: 'KDSwap',
     symbol: 'KDS',
     contract: 'kdlaunch.kdswap-token',
-    image: '@/assets/tokens/kds.png'
+    image: '/tokens/kds.png'
   },
   {
     id: 'Hypercent',
     symbol: 'HYPE',
     contract: 'hypercent.prod-hype-coin',
-    image: '@/assets/tokens/hype.png'
+    image: '/tokens/hype.png'
   },
   {
     id: 'Flux',
     symbol: 'FLUX',
     contract: 'runonflux.flux',
-    image: '@/assets/tokens/flux.png'
+    image: '/tokens/flux.png'
   },
   {
     id: 'Babena',
     symbol: 'BABE',
     contract: 'free.babena',
-    image: '@/assets/tokens/babe.png'
+    image: '/tokens/babe.png'
   },
   {
     id: 'Anedak',
     symbol: 'ADK',
     contract: 'free.anedak',
-    image: '@/assets/tokens/adk.png'
+    image: '/tokens/adk.png'
   },
   {
     id: 'Wizards Arena',
     symbol: 'WIZA',
     contract: 'free.wiza',
-    image: '@/assets/tokens/wiza.png'
+    image: '/tokens/wiza.png'
   },
   {
     id: 'Kapepe',
     symbol: 'KPP',
     contract: 'n_5a7ccd559b245b7dcbd5259e1ee43d04fbf93eab.kapepe',
-    image: '@/assets/tokens/kpp.png'
+    image: '/tokens/kpp.png'
   },
   {
     id: 'zUSD',
     symbol: 'ZUSD',
     contract: 'n_b742b4e9c600892af545afb408326e82a6c0c6ed.zUSD',
-    image: '@/assets/tokens/zusd.png'
+    image: '/tokens/zusd.png'
   },
   {
     id: 'Cyberfly',
     symbol: 'CFLY',
     contract: 'free.cyberfly_token',
-    image: '@/assets/tokens/cfly.png'
+    image: '/tokens/cfly.png'
   },
   {
     id: 'Heron',
     symbol: 'HERON',
     contract: 'n_e309f0fa7cf3a13f93a8da5325cdad32790d2070.heron',
-    image: '@/assets/tokens/heron.png'
+    image: 'tokens/heron.png'
   },
   {
     id: 'Maga',
     symbol: 'MAGA',
     contract: 'free.maga',
-    image: '@/assets/tokens/maga.png'
+    image: 'tokens/maga.png'
   },
   {
     id: 'Finux',
     symbol: 'FINUX',
     contract: 'free.finux',
-    image: '@/assets/tokens/finux.png'
+    image: 'tokens/finux.png'
   }
 ]
