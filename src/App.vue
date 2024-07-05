@@ -12,6 +12,11 @@ import { shortenString } from './functions/stringUtils'
 import CustomButton from './components/CustomButton.vue'
 import { openInNewTab } from './functions/utils'
 import Jackpot from '@/components/JackPot.vue'
+import { Buffer } from 'buffer'
+import process from 'process'
+
+window.Buffer = Buffer
+window.process = process
 
 const lotteryStore = useLotteryStore()
 lotteryStore.init()
