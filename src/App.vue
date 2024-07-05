@@ -23,6 +23,13 @@ lotteryStore.init()
 useOrderStore().initOrder()
 
 const account = useKadenaConnectionStore()
+
+function moveInToView() {
+  const element = document.getElementById('main')
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' })
+  }
+}
 </script>
 
 <template>
@@ -33,11 +40,12 @@ const account = useKadenaConnectionStore()
       autoplay
       muted
       playsinline
+      @ended="moveInToView()"
       class="w-full"
     ></video>
     <img v-else src="@/assets/bro_lottery.jpg" alt="" />
 
-    <div class="w-full p-[30px] space-y-[30px]">
+    <div id="main" class="w-full p-[30px] space-y-[30px]">
       <div
         class="width-full flex flex-col lg:grid lg:grid-cols-2 gap-2 lg:space-x-[16px] space-y-[16px] lg:space-y-0"
       >
