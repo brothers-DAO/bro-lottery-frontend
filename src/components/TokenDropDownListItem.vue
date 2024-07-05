@@ -15,10 +15,7 @@ const orderStore = useOrderStore()
     @click="orderStore.setNewToken(token.symbol, token.contract)"
   >
     <div class="flex flex-row items-center space-x-[10px]">
-      <img
-        :src="`/src/assets/tokens/${token.symbol.toLowerCase()}.png`"
-        class="w-[32px] h-[32px] rounded-full"
-      />
+      <img :src="token.image" class="w-[32px] h-[32px] rounded-full" />
       <div class="flex flex-col">
         <p class="text-[14px] text-core-darkest font-extrabold">{{ props.token.symbol }}</p>
       </div>
