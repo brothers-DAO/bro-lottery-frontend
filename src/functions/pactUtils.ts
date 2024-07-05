@@ -101,7 +101,7 @@ export function createBuyInBro(
           .setMeta({ chainId, gasLimit: gasMax, senderAccount: account })
           .setNetworkId(network)
           .createTransaction()
-      : createBroSignRequestV1(pactCommand, amount, account, broAccount)
+      : createBroSignRequestV1(pactCommand, amount, account, broAccount, gasMax)
 
   return tx
 }
@@ -158,7 +158,8 @@ function createBroSignRequestV1(
   pactCode: string,
   amount: number,
   account: string,
-  broAccount: string
+  broAccount: string,
+  gasLimit: number
 ): LinxSignRequest {
   const signingRequest = {
     code: pactCode,
@@ -189,7 +190,7 @@ function createBroSignRequestV1(
     data: {},
     nonce: creationTime().toString(),
     chainId: chain.toString(),
-    gasLimit: 3000,
+    gasLimit: gasLimit,
     ttl: 600,
     sender: account,
     extraSigners: []
