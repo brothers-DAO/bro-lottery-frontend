@@ -82,6 +82,7 @@ export function createBuyInBro(
   tickets: number
 ) {
   const chainId = chain.toString() as ChainId
+  const gasMax = tickets * 3000
   const tx =
     wallet === Wallets.EckoWallet
       ? PactClient.builder
@@ -97,7 +98,7 @@ export function createBuyInBro(
             ),
             signFor(`coin.GAS`)
           ])
-          .setMeta({ chainId, gasLimit: tickets * 3000, senderAccount: account })
+          .setMeta({ chainId, gasLimit: gasMax, senderAccount: account })
           .setNetworkId(network)
           .createTransaction()
       : createBroSignRequestV1(pactCommand, amount, account, broAccount)
