@@ -13,11 +13,11 @@ const orderStore = useOrderStore()
       </p>
       <p class="text-black">
         Price: {{ (orderStore.order!.price * orderStore.order!.tickets).toLocaleString() }}
-        {{ orderStore.order?.token.toUpperCase() }}
+        {{ orderStore.order?.token.symbol }}
       </p>
       <div
         class="flex flex-row items-center space-x-[10px]"
-        v-if="orderStore.order?.token === 'bro'"
+        v-if="orderStore.order?.token.symbol === 'BRO'"
       >
         <button
           @click="orderStore.removeTicket()"

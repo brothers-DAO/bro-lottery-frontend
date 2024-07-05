@@ -28,11 +28,7 @@ const orderStore = useOrderStore()
     <p>=</p>
     <div class="flex flex-row items-center space-x-[10px]">
       <p>{{ orderStore.order.price.toLocaleString() }}</p>
-      <img
-        :src="`src/assets/tokens/${orderStore.order.token}.png`"
-        alt="Bro Logo"
-        class="w-[50px] h-[50px]"
-      />
+      <img :src="orderStore.order.token.image" alt="token logo" class="w-[50px] h-[50px]" />
     </div>
   </div>
 </template>

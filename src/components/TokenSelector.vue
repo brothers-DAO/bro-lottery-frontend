@@ -18,8 +18,8 @@ const orderStore = useOrderStore()
         @click="dropdownOpen = !dropdownOpen"
       >
         <div class="flex flex-row items-center space-x-[10px]">
-          <img class="h-[32] w-[32px]" :src="`src/assets/tokens/${orderStore.order.token}.png`" />
-          <p>{{ orderStore.order.token.toUpperCase() }}</p>
+          <img class="h-[32] w-[32px]" :src="orderStore.order.token.image" />
+          <p>{{ orderStore.order.token.symbol }}</p>
         </div>
         <img class="h-[32] w-[32px]" src="@/assets/arrow_down.png" />
       </div>
