@@ -144,22 +144,24 @@ export const useOrderStore = defineStore('order', () => {
             ? `(${nameSpace}.bro-lottery-helpers.buy-ticket-in-kda "${account.account.value!.address}" ${order.value!.price * order.value!.tickets * 1.05} ${order.value!.luckyNumbers![0]})`
             : `(${nameSpace}.bro-lottery-helpers.buy-ticket-in-fungible ${qualName} "${account.account.value!.address}" ${order.value!.price * order.value!.tickets * 1.05} ${order.value!.luckyNumbers![0]})`
         const tx = await createBuyInToken(
-          order.value!.token.symbol.toLowerCase(),
-          qualName,
+          order.value!.token,
           account.account.value!.address,
           order.value!.price * order.value!.tickets * 1.05,
           pactCommand,
-          wallet.wallet!
+          wallet.wallet!,
+          order.value!.luckyNumbers!.length
         )
         const sig = await wallet.sign(tx)
         //const local = await getLocalResultForTransaction(sig as IUnsignedCommand)
-        const res = await sendTransaction(sig as IUnsignedCommand)
-        if (res?.status === 200) {
-          const reqKeys = await res.json()
-          transactionStore.addTransaction(reqKeys.requestKeys[0])
-        } else {
-          const result = await res?.text()
-          alert(`Error sending transaction! code: ${res?.status} ${result}`)
+        if (sig) {
+          const res = await sendTransaction(sig as IUnsignedCommand)
+          if (res?.status === 200) {
+            const reqKeys = await res.json()
+            transactionStore.addTransaction(reqKeys.requestKeys[0])
+          } else {
+            const result = await res?.text()
+            alert(`Error sending transaction! code: ${res?.status} ${result}`)
+          }
         }
       }
     }

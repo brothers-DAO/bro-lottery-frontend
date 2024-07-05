@@ -1,5 +1,5 @@
 import type { ChainId, IUnsignedCommand } from '@kadena/types'
-import { network, chain, nameSpace, broAccount } from '@/config'
+import { network, chain, nameSpace, broAccount, type kadenaToken } from '@/config'
 import type { Account, PactValueWithObject } from '@/types/kadena'
 import { Pact as PactClient, createClient } from '@kadena/client'
 import Pact from 'pact-lang-api'
@@ -107,18 +107,18 @@ export function createBuyInBro(
 }
 
 export async function createBuyInToken(
-  token: string,
-  qualName: string,
+  token: kadenaToken,
   account: string,
   amount: number,
   pactCommand: string,
-  wallet: Wallets
+  wallet: Wallets,
+  tickets: number
 ) {
   const salesAccount =
-    token === 'kda'
+    token.symbol === 'KDA'
       ? await getLocalData(`(${nameSpace}.bro-lottery-helpers.sales-account-in-kda)`)
       : await getLocalData(
-          `(${nameSpace}.bro-lottery-helpers.sales-account-in-fungible ${qualName})`
+          `(${nameSpace}.bro-lottery-helpers.sales-account-in-fungible ${token.contract})`
         )
   const chainId = chain.toString() as ChainId
   const tx =
@@ -126,7 +126,7 @@ export async function createBuyInToken(
       ? PactClient.builder
           .execution(pactCommand)
           .addSigner(account.slice(1), (signFor) => [
-            signFor(`${qualName}.TRANSFER`, account, salesAccount, {
+            signFor(`${token.contract}.TRANSFER`, account, salesAccount, {
               decimal: `${amount.toFixed(12)}`
             }),
             signFor(`coin.GAS`)
@@ -134,7 +134,7 @@ export async function createBuyInToken(
           .setMeta({ chainId, gasLimit: 8000, senderAccount: account })
           .setNetworkId(network)
           .createTransaction()
-      : createTokenSignRequestV1(pactCommand, amount, account, broAccount)
+      : createTokenSignRequestV1(pactCommand, amount, account, broAccount, tickets, token)
   return tx
 }
 
@@ -202,7 +202,9 @@ function createTokenSignRequestV1(
   pactCode: string,
   amount: number,
   account: string,
-  broAccount: string
+  broAccount: string,
+  tickets: number,
+  token: kadenaToken
 ): LinxSignRequest {
   const signingRequest = {
     code: pactCode,
@@ -216,8 +218,8 @@ function createTokenSignRequestV1(
         }
       },
       {
-        role: 'buy bro',
-        description: `Buy ${amount} BRO Lottery Tickets`,
+        role: `buy bro with ${token.symbol}`,
+        description: `Buy ${tickets} BRO Lottery Tickets`,
         cap: {
           args: [
             account,
@@ -226,7 +228,7 @@ function createTokenSignRequestV1(
               decimal: `${amount}`
             }
           ],
-          name: `n_5d119cc07ffd5efaef5c7feef9e878f34e3d4652.bro.TRANSFER`
+          name: `${token.contract}.TRANSFER`
         }
       }
     ],

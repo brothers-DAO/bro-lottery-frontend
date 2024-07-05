@@ -36,7 +36,7 @@ export const useLinxWalletStore = defineStore('linxWallet', () => {
     console.log('Disconnecting LinxWallet')
   }
 
-  async function sign(request: LinxSignRequest) {
+  async function signForBro(request: LinxSignRequest) {
     const order = useOrderStore()
     const req = requestData(
       request,
@@ -60,7 +60,31 @@ export const useLinxWalletStore = defineStore('linxWallet', () => {
     }
   }
 
-  return { linxWallet, connect, sign, disconnect }
+  async function signForToken(request: LinxSignRequest, token: string) {
+    const order = useOrderStore()
+    const req = requestData(
+      request,
+      'Buy Bro Lottery Ticket',
+      undefined,
+      chain,
+      token,
+      order.order!.tickets * order.order!.price,
+      0.0,
+      undefined,
+      false
+    )
+    const res = await linx(
+      newRequest('Send', 'Approve request for buying BRO lottery ticket(s).', req, true)
+    )
+
+    if (res.error) {
+      alert(`Problem with signing: ${res.error}`)
+    } else {
+      return res
+    }
+  }
+
+  return { linxWallet, connect, signForBro, signForToken, disconnect }
 })
 
 const linx = (...args: any) => window.flutter_inappwebview.callHandler('LinxWallet', ...args)

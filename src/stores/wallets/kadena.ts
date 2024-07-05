@@ -9,6 +9,7 @@ import { nameSpace } from '@/config'
 import { useLotteryStore } from '../lottery'
 import { useTxStore } from '../transactions'
 import { useLinxWalletStore } from './linx'
+import { useOrderStore } from '../order'
 
 export enum Wallets {
   EckoWallet = 'eckoWallet',
@@ -60,7 +61,13 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
           console.log(error)
         })
     } else if (wallet.value === Wallets.LinxWallet) {
-      return useLinxWalletStore().sign(cmd as LinxSignRequest)
+      const order = useOrderStore()
+      const broSale = order.order?.token.symbol === 'BRO'
+      if (broSale) {
+        return useLinxWalletStore().signForBro(cmd as LinxSignRequest)
+      } else {
+        return useLinxWalletStore().signForToken(cmd as LinxSignRequest, order.order!.token.symbol)
+      }
     } else if (wallet.value === Wallets.WalletConnect) {
       return useWCKadenaStore().signRequest(cmd as SigningCommand)
     } else {
