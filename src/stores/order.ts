@@ -126,13 +126,15 @@ export const useOrderStore = defineStore('order', () => {
         )
         const sig = await wallet.sign(tx)
         //const local = await getLocalResultForTransaction(sig as IUnsignedCommand)
-        const res = await sendTransaction(sig as IUnsignedCommand)
-        if (res?.status === 200) {
-          const reqKeys = await res.json()
-          transactionStore.addTransaction(reqKeys.requestKeys[0])
-        } else {
-          const result = await res?.text()
-          alert(`Error sending transaction! code: ${res?.status} ${result}`)
+        if (sig) {
+          const res = await sendTransaction(sig as IUnsignedCommand)
+          if (res?.status === 200) {
+            const reqKeys = await res.json()
+            transactionStore.addTransaction(reqKeys.requestKeys[0])
+          } else {
+            const result = await res?.text()
+            alert(`Error sending transaction! code: ${res?.status} ${result}`)
+          }
         }
       } else {
         // Buy single with kda
