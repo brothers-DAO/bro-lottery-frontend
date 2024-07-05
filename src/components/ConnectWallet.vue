@@ -78,7 +78,7 @@ const logout = async () => {
         @click="connectLinxWallet"
         class="p-4 rounded shadow bg-menu hover:bg-core"
       >
-        <img class="inline w-8 h-8 mr-4" src="../../assets/linx.png" />
+        <img class="inline w-8 h-8 mr-4" src="@/assets/linx.png" />
         <span class="font-extrabold text-white">Linx Wallet</span>
       </div>
     </div>
