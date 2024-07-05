@@ -225,7 +225,7 @@ function createTokenSignRequestV1(
             account,
             broAccount,
             {
-              decimal: `${amount}`
+              decimal: `${amount.toFixed(12)}`
             }
           ],
           name: `${token.contract}.TRANSFER`

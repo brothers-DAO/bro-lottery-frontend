@@ -68,7 +68,7 @@ export const useLinxWalletStore = defineStore('linxWallet', () => {
       undefined,
       chain,
       token,
-      order.order!.tickets * order.order!.price,
+      order.order!.price,
       0.0,
       undefined,
       false
