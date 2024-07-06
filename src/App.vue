@@ -53,7 +53,7 @@ function moveInToView() {
         <Jackpot :class="'lg:hidden'" />
         <BuyTicket v-if="lotteryStore.currentRound" />
         <div
-          v-else
+          v-if="lotteryStore.isActive && !lotteryStore.currentRound"
           class="w-full flex flex-col items-center justify-center p-[16px] rounded-lg bg-white space-y-[16px] text-black text-[20px]"
         >
           <img src="@/assets/load.png" spin alt="loading" class="w-[20px] h-[20px] animate-spin" />

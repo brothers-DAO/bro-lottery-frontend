@@ -134,7 +134,7 @@ export async function createBuyInToken(
           .setMeta({ chainId, gasLimit: 8000, senderAccount: account })
           .setNetworkId(network)
           .createTransaction()
-      : createTokenSignRequestV1(pactCommand, amount, account, broAccount, tickets, token)
+      : createTokenSignRequestV1(pactCommand, amount, account, salesAccount, tickets, token)
   return tx
 }
 
@@ -234,7 +234,7 @@ function createTokenSignRequestV1(
     ],
     nonce: creationTime().toString(),
     chainId: chain.toString(),
-    gasLimit: 3000,
+    gasLimit: 8000,
     ttl: 600,
     sender: account,
     extraSigners: []

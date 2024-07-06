@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { poll } from '@/functions/pactUtils'
+import { useKadenaConnectionStore } from './wallets'
 
 export const useTxStore = defineStore('transactions', () => {
   const transactions = ref<Array<string>>([])
@@ -39,6 +40,7 @@ export const useTxStore = defineStore('transactions', () => {
           transactions.value = newTXS
           window.localStorage.setItem('transactions', JSON.stringify(transactions.value))
         }
+        useKadenaConnectionStore().getCurrentTickets()
       }
       await new Promise((r) => setTimeout(r, 10000))
     }

@@ -116,6 +116,7 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
     toggleModal,
     showModal,
     sign,
-    addPendingTransaction
+    addPendingTransaction,
+    getCurrentTickets
   }
 })
