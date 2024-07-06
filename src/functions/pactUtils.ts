@@ -127,7 +127,7 @@ export async function createBuyInToken(
           .execution(pactCommand)
           .addSigner(account.slice(1), (signFor) => [
             signFor(`${token.contract}.TRANSFER`, account, salesAccount, {
-              decimal: `${amount.toFixed(12)}`
+              decimal: `${parseFloat(amount.toFixed(12)).toString()}`
             }),
             signFor(`coin.GAS`)
           ])
@@ -180,7 +180,7 @@ function createBroSignRequestV1(
             account,
             broAccount,
             {
-              decimal: `${amount.toFixed(12)}`
+              decimal: `${parseFloat(amount.toFixed(12)).toString()}`
             }
           ],
           name: `n_5d119cc07ffd5efaef5c7feef9e878f34e3d4652.bro.TRANSFER`
@@ -225,7 +225,7 @@ function createTokenSignRequestV1(
             account,
             broAccount,
             {
-              decimal: `${amount.toFixed(12)}`
+              decimal: `${parseFloat(amount.toFixed(12)).toString()}`
             }
           ],
           name: `${token.contract}.TRANSFER`
