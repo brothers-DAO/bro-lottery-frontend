@@ -6,6 +6,7 @@ import { WalletConnectModal } from '@walletconnect/modal'
 import type { SessionTypes, EngineTypes } from '@walletconnect/types'
 import { useKadenaConnectionStore, Wallets } from '@/stores/wallets'
 import type { Account, SigningCommand } from '@/types/kadena'
+import { network } from '@/config'
 
 interface wcKadena {
   pubKey: string | undefined
@@ -15,6 +16,17 @@ interface wcKadena {
 
 interface wcResponse {
   accounts: Array<wcAccountsPerNetwork>
+}
+
+interface wcSignResponse {
+  body: {
+    cmd: string
+    hash: string
+    sigs: Array<{
+      sig: string
+      pubKey?: string
+    }>
+  }
 }
 
 interface wcAccountsPerNetwork {
@@ -79,38 +91,24 @@ export const useWCKadenaStore = defineStore('wcKadena', () => {
       console.log('Established session:', session)
       _subscribeToEvents()
       // Grab account
-      if (session.namespaces.kadena.accounts.find((e) => e.includes('mainnet01'))) {
+      if (session.namespaces.kadena.accounts.find((e) => e.includes(network))) {
         wcKadena.value = {
-          pubKey: session.namespaces.kadena.accounts.find((e) => e.includes('mainnet01'))!,
+          pubKey: session.namespaces.kadena.accounts.find((e) => e.includes(network))!,
           isConnected: true,
           session: session
         }
-
-        const accountsRequest = {
-          id: 1,
-          jsonrpc: '2.0',
-          method: 'kadena_getAccounts_v1',
-          params: {
-            accounts: [
-              {
-                account: wcKadena.value.pubKey,
-                contracts: ['coin']
-              }
-            ]
-          }
-        }
-
-        const response: wcResponse = await client.value!.request({
-          topic: session.topic,
-          chainId: 'kadena:mainnet01',
-          request: accountsRequest
-        })
+        const response = await getKadenaAccounts()
         walletconnectModal.closeModal()
         // Grab the first account
-        // TODO: Show user all accounts and select?
         window.localStorage.setItem('wcKadena', JSON.stringify(wcKadena.value))
-        const acc = response.accounts[0].kadenaAccounts[0].name
-        kadenaStore.setAccount(acc as Account, Wallets.WalletConnect)
+        if (response.accounts === undefined || response.accounts.length === 0) {
+          const acc = wcKadena.value.pubKey?.split(':')[2]
+          kadenaStore.setAccount(acc as Account, Wallets.WalletConnect)
+        } else {
+          // Take the first account, could improve by letting the user choose if multiple
+          const acc = response.accounts[0].kadenaAccounts[0].name
+          kadenaStore.setAccount(acc as Account, Wallets.WalletConnect)
+        }
       }
     } catch (error) {
       console.log('Error: ', error)
@@ -133,25 +131,33 @@ export const useWCKadenaStore = defineStore('wcKadena', () => {
       window.localStorage.removeItem('wcKadena')
     }
     client.value = undefined
+    wcKadena.value = {
+      pubKey: undefined,
+      session: undefined,
+      isConnected: false
+    }
   }
 
   async function signRequest(request: SigningCommand) {
-    await connect()
-
     const newSignRequest = {
       id: 1,
       jsonrpc: '2.0',
       method: 'kadena_sign_v1',
-      params: {
-        request
-      }
+      params: request
     }
-    const response: wcResponse = await client.value!.request({
-      topic: wcKadena.value.session!.topic,
-      chainId: 'kadena:mainnet01',
-      request: newSignRequest
-    })
-    console.log(response)
+    try {
+      kadenaStore.showApprove = true
+      const response: wcSignResponse = await client.value!.request({
+        topic: wcKadena.value.session!.topic,
+        chainId: `kadena:${network}`,
+        request: newSignRequest
+      })
+      kadenaStore.showApprove = false
+      return response.body
+    } catch (error) {
+      alert(JSON.stringify(error))
+    }
+    kadenaStore.showApprove = false
   }
 
   const _subscribeToEvents = async () => {
@@ -181,5 +187,49 @@ export const useWCKadenaStore = defineStore('wcKadena', () => {
     })
   }
 
-  return { wcKadena, connect, disconnect, signRequest }
+  async function getKadenaAccounts() {
+    const accountsRequest = {
+      id: 1,
+      jsonrpc: '2.0',
+      method: 'kadena_getAccounts_v1',
+      params: {
+        accounts: [
+          {
+            account: wcKadena.value.pubKey,
+            contracts: ['coin']
+          }
+        ]
+      }
+    }
+
+    const response: wcResponse = await client.value!.request({
+      topic: wcKadena.value!.session!.topic,
+      chainId: `kadena:${network}`,
+      request: accountsRequest
+    })
+
+    return response
+  }
+
+  async function init() {
+    if (window.localStorage.getItem('wcKadena') != null) {
+      wcKadena.value = JSON.parse(window.localStorage.getItem('wcKadena')!)
+      client.value = await Client.init({
+        projectId,
+        relayUrl
+      })
+      const response = await getKadenaAccounts()
+
+      if (response.accounts === undefined || response.accounts.length === 0) {
+        const acc = wcKadena.value.pubKey?.split(':')[2]
+        kadenaStore.setAccount(acc as Account, Wallets.WalletConnect)
+      } else {
+        // only take the first account
+        const acc = response.accounts[0].kadenaAccounts[0].name
+        kadenaStore.setAccount(acc as Account, Wallets.WalletConnect)
+      }
+    }
+  }
+
+  return { wcKadena, connect, disconnect, signRequest, init }
 })

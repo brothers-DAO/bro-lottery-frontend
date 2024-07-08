@@ -30,6 +30,7 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
   })
   const wallet = ref<Wallets | undefined>()
   const showModal = ref(false)
+  const showApprove = ref(false)
 
   function setAccount(address: Account, walletType: Wallets) {
     account.value = {
@@ -102,6 +103,7 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
   function initWallets() {
     useLinxWalletStore().connect()
     useEckoWalletStore().init()
+    useWCKadenaStore().init()
     const transactions = useTxStore()
     transactions.init()
   }
@@ -115,6 +117,7 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
     disconnect,
     toggleModal,
     showModal,
+    showApprove,
     sign,
     addPendingTransaction,
     getCurrentTickets
