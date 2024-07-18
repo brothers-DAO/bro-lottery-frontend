@@ -46,12 +46,14 @@ export const tokenList: Array<kadenaToken> = [
     contract: 'mok.token',
     image: '/tokens/mok.png'
   },
+  /* Blacklisted because no pair on Ecko
   {
     id: 'K:Shib',
     symbol: 'KSHIB',
     contract: 'free.SHIB',
     image: '/tokens/kshib.png'
   },
+  */
   {
     id: 'Docushield',
     symbol: 'DOC',
@@ -106,18 +108,22 @@ export const tokenList: Array<kadenaToken> = [
     contract: 'free.anedak',
     image: '/tokens/adk.png'
   },
+
+  /* Blacklist because 0 liquidity on EckoDEX
   {
     id: 'Wizards Arena',
     symbol: 'WIZA',
     contract: 'free.wiza',
     image: '/tokens/wiza.png'
   },
+  */
+  /* Blacklisted because no pair on Ecko
   {
     id: 'Kapepe',
     symbol: 'KPP',
     contract: 'n_5a7ccd559b245b7dcbd5259e1ee43d04fbf93eab.kapepe',
     image: '/tokens/kpp.png'
-  },
+  },*/
   {
     id: 'zUSD',
     symbol: 'ZUSD',
@@ -141,11 +147,13 @@ export const tokenList: Array<kadenaToken> = [
     symbol: 'MAGA',
     contract: 'free.maga',
     image: 'tokens/maga.png'
-  },
+  }
+  /* Blacklist because token is broken
   {
     id: 'Finux',
     symbol: 'FINUX',
     contract: 'free.finux',
     image: 'tokens/finux.png'
   }
+  */
 ]
