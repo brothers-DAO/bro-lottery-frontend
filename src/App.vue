@@ -15,6 +15,7 @@ import { openInNewTab } from './functions/utils'
 import Jackpot from '@/components/JackPot.vue'
 import { Buffer } from 'buffer'
 import process from 'process'
+import WaitingWC from './components/WaitingWC.vue'
 
 window.Buffer = Buffer
 window.process = process
@@ -95,5 +96,6 @@ function moveInToView() {
 
     <SelectWallet />
     <ApproveInWallet />
+    <WaitingWC />
   </div>
 </template>

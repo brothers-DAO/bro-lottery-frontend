@@ -3,14 +3,14 @@ import { defineStore } from 'pinia'
 import Client from '@walletconnect/sign-client'
 import { WalletConnectModal } from '@walletconnect/modal'
 // import { getSdkError } from '@walletconnect/utils'
-import type { EngineTypes } from '@walletconnect/types'
+import type { EngineTypes, SessionTypes } from '@walletconnect/types'
 import { useKadenaConnectionStore, Wallets } from '@/stores/wallets'
 import type { Account, SigningCommand } from '@/types/kadena'
 import { network } from '@/config'
 
 interface wcKadena {
   pubKey: string | undefined
-  topic: string | undefined
+  session: SessionTypes.Struct | undefined
   isConnected: boolean
 }
 
@@ -52,7 +52,7 @@ export const useWCKadenaStore = defineStore('wcKadena', () => {
   const client = ref<Client | undefined>(undefined)
   const wcKadena = ref<wcKadena>({
     pubKey: undefined,
-    topic: undefined,
+    session: undefined,
     isConnected: false
   })
 
@@ -70,13 +70,9 @@ export const useWCKadenaStore = defineStore('wcKadena', () => {
       }
     }
 
-    if (window.localStorage.getItem('wcKadena') != null) {
-      wcKadena.value = JSON.parse(window.localStorage.getItem('wcKadena')!)
-    }
-
     try {
       const { uri, approval } = await client.value.connect({
-        pairingTopic: wcKadena.value.topic ?? '',
+        pairingTopic: wcKadena.value.session?.pairingTopic,
         requiredNamespaces: requiredNameSpaces
       })
 
@@ -95,8 +91,9 @@ export const useWCKadenaStore = defineStore('wcKadena', () => {
         wcKadena.value = {
           pubKey: session.namespaces.kadena.accounts.find((e) => e.includes(network))!,
           isConnected: true,
-          topic: session.topic
+          session: session
         }
+        console.log('getting accounts')
         const response = await getKadenaAccounts()
         walletconnectModal.closeModal()
         // Grab the first account
@@ -111,7 +108,11 @@ export const useWCKadenaStore = defineStore('wcKadena', () => {
         }
       }
     } catch (error) {
-      console.log('Error: ', error)
+      console.log('WC Error: ', error)
+      // Clear existing connection
+      localStorage.removeItem('wcKadena')
+      // Open up 'connect wallet'
+      kadenaStore.showModal = true
       return false
     }
 
@@ -121,7 +122,7 @@ export const useWCKadenaStore = defineStore('wcKadena', () => {
   async function disconnect() {
     if (client.value != undefined) {
       const disconnectData: EngineTypes.DisconnectParams = {
-        topic: wcKadena.value.topic!,
+        topic: wcKadena.value.session!.pairingTopic,
         reason: {
           code: 6000,
           message: 'Disconnected by client'
@@ -133,7 +134,7 @@ export const useWCKadenaStore = defineStore('wcKadena', () => {
     client.value = undefined
     wcKadena.value = {
       pubKey: undefined,
-      topic: undefined,
+      session: undefined,
       isConnected: false
     }
   }
@@ -148,7 +149,7 @@ export const useWCKadenaStore = defineStore('wcKadena', () => {
     try {
       kadenaStore.showApprove = true
       const response: wcSignResponse = await client.value!.request({
-        topic: wcKadena.value.topic!,
+        topic: wcKadena.value.session!.pairingTopic!,
         chainId: `kadena:${network}`,
         request: newSignRequest
       })
@@ -174,12 +175,11 @@ export const useWCKadenaStore = defineStore('wcKadena', () => {
     })
 
     client.value.on('session_update', ({ topic, params }) => {
-      // console.log("EVENT", "session_update", { topic, params })
+      console.log('EVENT', 'session_update', { topic, params })
       // const { namespaces } = params
       // const _session = _client.session.get(topic)
       // const updatedSession = { ..._session, namespaces }
       // onSessionConnected(updatedSession)
-      console.log(topic, params)
     })
 
     client.value.on('session_delete', () => {
@@ -203,30 +203,20 @@ export const useWCKadenaStore = defineStore('wcKadena', () => {
     }
 
     const response: wcResponse = await client.value!.request({
-      topic: wcKadena.value!.topic!,
+      topic: wcKadena.value!.session!.topic,
       chainId: `kadena:${network}`,
       request: accountsRequest
     })
+    kadenaStore.showPending = false
     return response
   }
 
   async function init() {
     if (window.localStorage.getItem('wcKadena') != null) {
+      kadenaStore.showPending = true
       wcKadena.value = JSON.parse(window.localStorage.getItem('wcKadena')!)
-      client.value = await Client.init({
-        projectId,
-        relayUrl
-      })
-      const response = await getKadenaAccounts()
-
-      if (response.accounts === undefined || response.accounts.length === 0) {
-        const acc = wcKadena.value.pubKey?.split(':')[2]
-        kadenaStore.setAccount(acc as Account, Wallets.WalletConnect)
-      } else {
-        // only take the first account
-        const acc = response.accounts[0].kadenaAccounts[0].name
-        kadenaStore.setAccount(acc as Account, Wallets.WalletConnect)
-      }
+      console.log(kadenaStore.showPending)
+      connect()
     }
   }
 

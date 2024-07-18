@@ -31,6 +31,7 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
   const wallet = ref<Wallets | undefined>()
   const showModal = ref(false)
   const showApprove = ref(false)
+  const showPending = ref(false)
 
   function setAccount(address: Account, walletType: Wallets) {
     account.value = {
@@ -118,6 +119,7 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
     toggleModal,
     showModal,
     showApprove,
+    showPending,
     sign,
     addPendingTransaction,
     getCurrentTickets

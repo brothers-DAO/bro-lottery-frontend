@@ -1,7 +1,7 @@
-export const network: string = 'testnet04'
-export const nameSpace: string = 'n_c517568b89eeb5b6e6ab14560e710f287032e672'
-export const broAccount: string = 'c:mjFl8Li8Qv38mwFnqytnkDVyJWpj3sBRDPnDfv3LH_g'
-export const chain: number = 18
+export const network: string = 'mainnet01'
+export const nameSpace: string = 'n_e47192edb40ff014ab9c82ae42972d09bbad4316'
+export const broAccount: string = 'c:SW1jyng-6fFDJW_sOTN5JV2T-fkn2NZJkZK2c3Sqgv8'
+export const chain: number = 2
 export interface kadenaToken {
   id: string
   symbol: string
