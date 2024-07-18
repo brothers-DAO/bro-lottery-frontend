@@ -41,7 +41,7 @@ export const useLotteryStore = defineStore('lottery', () => {
     try {
       const req = await getLocalData(`(${nameSpace}.bro-lottery-helpers.ticket-price-in-kda)`)
       if (req && currentRound.value) {
-        currentRound.value.price_kda = req
+        currentRound.value.price_kda = req.decimal?parseFloat(req.decimal):req;
       }
     } catch (error) {
       alert(`Error getting ticket price in KDA: ${error}`)

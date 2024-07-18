@@ -66,7 +66,8 @@ export const useOrderStore = defineStore('order', () => {
     const req = await getLocalData(
       `(${nameSpace}.bro-lottery-helpers.ticket-price-in-fungible ${contract})`
     )
-    return req
+
+    return req.decimal?parseFloat(req.decimal):req;
   }
 
   function addTicket() {
