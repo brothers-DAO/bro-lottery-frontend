@@ -190,6 +190,7 @@ function createBroSignRequestV1(
     data: {},
     nonce: creationTime().toString(),
     chainId: chain.toString(),
+    gasPrice: 0.0000001,
     gasLimit: gasLimit,
     ttl: 600,
     sender: account,
