@@ -27,7 +27,7 @@ export const useOrderStore = defineStore('order', () => {
   function initOrder() {
     order.value = {
       token: tokenList[0],
-      price: 0.01,
+      price: 0.001,
       tickets: 1,
       luckyNumbers: [0],
       isLoading: false
