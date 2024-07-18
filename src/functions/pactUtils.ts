@@ -89,7 +89,7 @@ export function createBuyInBro(
           .execution(pactCommand)
           .addSigner(account.slice(1), (signFor) => [
             signFor(
-              `n_5d119cc07ffd5efaef5c7feef9e878f34e3d4652.bro.TRANSFER`,
+              `n_582fed11af00dc626812cd7890bb88e72067f28c.bro.TRANSFER`,
               account,
               broAccount,
               {
@@ -183,7 +183,7 @@ function createBroSignRequestV1(
               decimal: `${parseFloat(amount.toFixed(12)).toString()}`
             }
           ],
-          name: `n_5d119cc07ffd5efaef5c7feef9e878f34e3d4652.bro.TRANSFER`
+          name: `n_582fed11af00dc626812cd7890bb88e72067f28c.bro.TRANSFER`
         }
       }
     ],
