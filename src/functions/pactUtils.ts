@@ -131,7 +131,7 @@ export async function createBuyInToken(
             }),
             signFor(`coin.GAS`)
           ])
-          .setMeta({ chainId, gasLimit: 8000, senderAccount: account })
+          .setMeta({ chainId, gasLimit: 11000, senderAccount: account })
           .setNetworkId(network)
           .createTransaction()
       : createTokenSignRequestV1(pactCommand, amount, account, salesAccount, tickets, token)
