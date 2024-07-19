@@ -235,7 +235,7 @@ function createTokenSignRequestV1(
     ],
     nonce: creationTime().toString(),
     chainId: chain.toString(),
-    gasLimit: 8000,
+    gasLimit: 11000,
     ttl: 600,
     sender: account,
     extraSigners: []
