@@ -235,6 +235,7 @@ function createTokenSignRequestV1(
     ],
     nonce: creationTime().toString(),
     chainId: chain.toString(),
+    gasPrice: 0.0000001,
     gasLimit: 11000,
     ttl: 600,
     sender: account,
