@@ -46,6 +46,14 @@ export const tokenList: Array<kadenaToken> = [
     contract: 'mok.token',
     image: '/tokens/mok.png'
   },
+  {
+    id: 'Ktoshi',
+    symbol: 'KTOSHI',
+    contract: 'n_625e9938ae84bdb7d190f14fc283c7a6dfc15d58.ktoshi',
+    image: 'tokens/ktoshi.png'
+  },
+
+
   /* Blacklisted because no pair on Ecko
   {
     id: 'K:Shib',
