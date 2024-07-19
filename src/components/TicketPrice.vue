@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useOrderStore } from '@/stores/order'
-import { ref } from 'vue'
 
 const orderStore = useOrderStore()
 </script>
@@ -30,5 +29,13 @@ const orderStore = useOrderStore()
       <p>{{ orderStore.order.price.toLocaleString() }}</p>
       <img :src="orderStore.order.token.image" alt="token logo" class="w-[50px] h-[50px]" />
     </div>
+  </div>
+  <div v-if="orderStore.tokenBalance != undefined">
+    <p
+      class="font-extrabold"
+      :class="orderStore.tokenBalance === 0 ? 'text-red-600' : 'text-black'"
+    >
+      Balance (Chain 2) : {{ orderStore.tokenBalance }} {{ orderStore.order!.token.symbol }}
+    </p>
   </div>
 </template>

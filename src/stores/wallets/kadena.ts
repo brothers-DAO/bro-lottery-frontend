@@ -4,7 +4,12 @@ import { type Account, type SigningCommand } from '@/types/kadena'
 import { useEckoWalletStore } from '@/stores/wallets'
 import { useWCKadenaStore } from '@/stores/wallets'
 import { type IUnsignedCommand } from '@kadena/client'
-import { getLocalData, type LinxSignRequest } from '@/functions/pactUtils'
+import {
+  checkBalanceForGas,
+  getBalanceForToken,
+  getLocalData,
+  type LinxSignRequest
+} from '@/functions/pactUtils'
 import { nameSpace } from '@/config'
 import { useLotteryStore } from '../lottery'
 import { useTxStore } from '../transactions'
@@ -31,13 +36,16 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
   const wallet = ref<Wallets | undefined>()
   const showModal = ref(false)
 
-  function setAccount(address: Account, walletType: Wallets) {
+  async function setAccount(address: Account, walletType: Wallets) {
     account.value = {
       address,
       isConnected: true
     }
     wallet.value = walletType
     getCurrentTickets()
+    checkBalanceForGas(address)
+    const balance = await getBalanceForToken(useOrderStore().order!.token, address)
+    useOrderStore().tokenBalance = balance
   }
 
   async function disconnect() {
@@ -50,6 +58,8 @@ export const useKadenaConnectionStore = defineStore('kadenaConnection', () => {
       address: undefined,
       isConnected: false
     }
+    useOrderStore().tokenBalance = undefined
+    useOrderStore().initOrder()
     wallet.value = undefined
   }
 

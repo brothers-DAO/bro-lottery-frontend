@@ -268,6 +268,26 @@ export async function sendTransaction(tx: IUnsignedCommand) {
   }
 }
 
+export async function checkBalanceForGas(address: string) {
+  const res = await getLocalData(`(coin.get-balance "${address}")`)
+  if (res) {
+    const kdaBalance = res.decimal ?? res
+    if (kdaBalance < 0.01) {
+      alert(
+        `Make sure you have enough KDA on Chain 2 to pay for gas! Your current balance is: ${kdaBalance} KDA.`
+      )
+    }
+  } else {
+    alert(`Could not find any KDA balance on Chain 2, make sure to have KDA on chain 2 for GAS!.`)
+  }
+}
+
+export async function getBalanceForToken(token: kadenaToken, address: string) {
+  const res = await getLocalData(`(${token.contract}.get-balance "${address}")`)
+  const value = typeof res === 'string' ? 0 : res.decimal ?? res
+  return value
+}
+
 export async function getKeyset(
   module: string,
   account: Account,

@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import {
   createBuyInBro,
   createBuyInToken,
+  getBalanceForToken,
   getLocalData,
   sendTransaction
 } from '@/functions/pactUtils'
@@ -23,6 +24,7 @@ export interface Order {
 
 export const useOrderStore = defineStore('order', () => {
   const order = ref<Order | undefined>(undefined)
+  const tokenBalance = ref<number | undefined>(undefined)
 
   function initOrder() {
     order.value = {
@@ -57,6 +59,13 @@ export const useOrderStore = defineStore('order', () => {
         console.log(error)
       }
     }
+    if (useAccount().account.value?.isConnected) {
+      const balance = await getBalanceForToken(
+        order.value!.token,
+        useAccount().account.value!.address
+      )
+      tokenBalance.value = balance
+    }
     order.value!.tickets = 1
     order.value!.luckyNumbers = [0]
     order.value!.isLoading = false
@@ -67,12 +76,16 @@ export const useOrderStore = defineStore('order', () => {
       `(${nameSpace}.bro-lottery-helpers.ticket-price-in-fungible ${contract})`
     )
 
-    return req.decimal?parseFloat(req.decimal):req;
+    return req.decimal ? parseFloat(req.decimal) : req
   }
 
   function addTicket() {
-    order.value!.tickets++
-    order.value!.luckyNumbers?.push(0)
+    if (order.value!.tickets < 49) {
+      order.value!.tickets++
+      order.value!.luckyNumbers?.push(0)
+    } else {
+      alert('You can only buy a maximum of 49 tickets at once due to gas constraints!')
+    }
   }
 
   function removeTicket() {
@@ -171,5 +184,14 @@ export const useOrderStore = defineStore('order', () => {
     initOrder()
   }
 
-  return { order, initOrder, setNewToken, addTicket, removeTicket, changeLuckyNumber, buyTickets }
+  return {
+    order,
+    tokenBalance,
+    initOrder,
+    setNewToken,
+    addTicket,
+    removeTicket,
+    changeLuckyNumber,
+    buyTickets
+  }
 })
