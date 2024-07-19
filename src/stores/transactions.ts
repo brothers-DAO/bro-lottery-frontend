@@ -33,9 +33,13 @@ export const useTxStore = defineStore('transactions', () => {
       const res = await poll(transactions.value)
       if (Object.keys(res).length != 0) {
         for (const i in res) {
-          alert(
-            `Transaction ${i} has been mined! Result: ${res[i].result.status}, ${res[i].result.data}`
-          )
+          if (res[i].result.error) {
+            alert(`Transaction ${i} failed! Reason: ${res[i].result.error.message}`)
+          } else {
+            alert(
+              `Transaction ${i} has been mined! Result: ${res[i].result.status}, ${res[i].result.data}`
+            )
+          }
           const newTXS = transactions.value.filter((t) => t !== i)
           transactions.value = newTXS
           window.localStorage.setItem('transactions', JSON.stringify(transactions.value))
