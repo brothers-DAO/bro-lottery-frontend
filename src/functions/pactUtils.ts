@@ -11,8 +11,8 @@ const NETWORK_ID = network
 
 const creationTime = () => Math.round(new Date().getTime() / 1000)
 
-/* To be sure to have no issues later, we limit to 8 significant digits*/
-const to_decimal_cap = x => ({decimal:Decimal(x).toSignificantDigits(8, Decimal.ROUND_UP).toFixed(12)})
+/* To be sure to have no issues later, we limit to 5 significant digits*/
+const to_decimal_cap = x => ({decimal:Decimal(x).toSignificantDigits(5, Decimal.ROUND_UP).toFixed(12)})
 
 export interface LinxSignRequest {
   code: string
