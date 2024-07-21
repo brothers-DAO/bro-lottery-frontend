@@ -2,6 +2,7 @@ import type { ChainId, IUnsignedCommand } from '@kadena/types'
 import { network, chain, nameSpace, broAccount, type kadenaToken } from '@/config'
 import type { Account, PactValueWithObject } from '@/types/kadena'
 import { Pact as PactClient, createClient } from '@kadena/client'
+import {Decimal} from 'decimal.js';
 import Pact from 'pact-lang-api'
 import { Wallets } from '@/stores/wallets'
 
@@ -9,6 +10,9 @@ const CHAINWEB_NODE = import.meta.env.VITE_CHAINWEB_NODE
 const NETWORK_ID = network
 
 const creationTime = () => Math.round(new Date().getTime() / 1000)
+
+/* To be sure to have no issues later, we limit to 8 significant digits*/
+const to_decimal_cap = x => ({decimal:Decimal(x).toSignificantDigits(8, Decimal.ROUND_UP).toFixed(12)})
 
 export interface LinxSignRequest {
   code: string
@@ -92,9 +96,7 @@ export function createBuyInBro(
               `n_582fed11af00dc626812cd7890bb88e72067f28c.bro.TRANSFER`,
               account,
               broAccount,
-              {
-                decimal: `${amount}`
-              }
+              to_decimal_cap(amount)
             ),
             signFor(`coin.GAS`)
           ])
@@ -126,9 +128,7 @@ export async function createBuyInToken(
       ? PactClient.builder
           .execution(pactCommand)
           .addSigner(account.slice(1), (signFor) => [
-            signFor(`${token.contract}.TRANSFER`, account, salesAccount, {
-              decimal: `${parseFloat(amount.toFixed(12)).toString()}`
-            }),
+            signFor(`${token.contract}.TRANSFER`, account, salesAccount,to_decimal_cap(amount)),
             signFor(`coin.GAS`)
           ])
           .setMeta({ chainId, gasLimit: 11000, senderAccount: account })
@@ -179,9 +179,7 @@ function createBroSignRequestV1(
           args: [
             account,
             broAccount,
-            {
-              decimal: `${parseFloat(amount.toFixed(12)).toString()}`
-            }
+            to_decimal_cap(amount)
           ],
           name: `n_582fed11af00dc626812cd7890bb88e72067f28c.bro.TRANSFER`
         }
@@ -225,9 +223,7 @@ function createTokenSignRequestV1(
           args: [
             account,
             broAccount,
-            {
-              decimal: `${parseFloat(amount.toFixed(12)).toString()}`
-            }
+            to_decimal_cap(amount)
           ],
           name: `${token.contract}.TRANSFER`
         }
